@@ -1,0 +1,66 @@
+\documentclass[
+    11pt,
+    spanish,
+	a4paper
+]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{graphicx}
+\usepackage{authoraftertitle}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{verbatim}
+\usepackage{listings}
+\captionsetup[table]{labelformat=empty}
+
+\def\doctype{Informe final}
+\title{Algoritmo CFAR}
+\author{Jonathan Cagua \\ Gonzalo Nahuel Vaca}
+
+\begin{document}
+
+\makeatletter
+\begin{titlepage}
+	\begin{center}
+		\vspace*{1cm}
+
+		\Huge
+		\textbf{\doctype}
+		\vspace{0.5cm}
+
+		\LARGE
+		\@title
+		\vspace{0.5cm}
+
+		\textbf{Procesamiento Digital de Señales}
+
+		\vspace{1.5cm}
+
+		\textbf{\@author}
+
+		\vspace{1.5cm}
+
+		\includegraphics[width=0.8\textwidth]{Figuras/logoFIUBA.pdf}
+
+		\vfill
+		Maestría en Sistemas Embebidos\\
+		Universidad de Buenos Aires\\
+		Argentina\\
+		\today
+	\end{center}
+\end{titlepage}
+\makeatother
+\newpage
+
+\section{Sección de ejemplo}
+
+Texto de ejemplo que hace referencia a la figura \ref{fig:ejemplo}.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.5\textwidth]{Figuras/logoFIUBA.pdf}
+	\caption{Una figura de ejemplo.}
+	\label{fig:ejemplo}
+\end{figure}
+
+\end{document}
