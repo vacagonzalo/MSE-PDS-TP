@@ -1,3 +1,10 @@
+# Cocotb artifacts
+test/sim_build/
+test/__pycache__/
+test/*.o
+test/*.xml
+test/ctpe
+
 # Created by https://www.toptal.com/developers/gitignore/api/latex
 # Edit at https://www.toptal.com/developers/gitignore?templates=latex
 
