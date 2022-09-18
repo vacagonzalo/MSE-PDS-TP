@@ -97,7 +97,7 @@ begin
     state_machine : process(clock) is
     begin
         if rising_edge(clock) then
-            if reset = '1' then
+            if reset = '0' then
                 filter_output <= '0';
             elsif enable = '1' then
 
