@@ -4,9 +4,9 @@ use ieee.numeric_std.all;
 
 entity ctpe is
     generic(
-        B : integer := 12;
-        N : integer := 32;
-        G : integer := 8
+        B : integer := 12; -- Data width in bits
+        N : integer := 32; -- CFAR window size
+        G : integer := 8   -- CFAR guard size
     );
     port(
         -- Common control signals -------------------------
@@ -93,6 +93,24 @@ architecture rtl of ctpe is
         return charlie;
     end function get_average;
 
+    function multiplication(
+        alpha : std_logic_vector(B-1 downto 0);
+        bravo : std_logic_vector(B-1 downto 0))
+        return std_logic_vector is
+    variable charlie : std_logic_vector((B*2)-1 downto 0);
+    variable big_half : std_logic_vector(B-1 downto 0);
+    variable small_half : std_logic_vector(B-1 downto 0);
+    constant zero : std_logic_vector(B-1 downto 0) := (others => '0');
+    begin
+        charlie := std_logic_vector(unsigned(alpha) * unsigned(bravo));
+        big_half := charlie((B*2)-1 downto B);
+        small_half := charlie(B-1 downto 0);
+        if big_half /= zero then
+            small_half := (others => '1');
+        end if;
+        return small_half;
+    end function multiplication;
+
 begin
     state_machine : process(clock) is
     begin
@@ -109,8 +127,7 @@ begin
                     when average => threshold <= get_average(ape_left, ape_right);
                 end case;
 
-                scaled_threshold <= std_logic_vector(
-                    unsigned(threshold) * unsigned(scale_factor));
+                scaled_threshold <= multiplication(threshold, scale_factor);
 
                 if filter_input > scaled_threshold then
                     filter_output <= '1';
