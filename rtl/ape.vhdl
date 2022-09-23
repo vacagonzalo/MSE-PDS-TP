@@ -38,7 +38,8 @@ architecture rtl of ape is
         variable rtn : std_logic_vector((N/2)-1 downto 0);
     begin
         aux := std_logic_vector(unsigned(accu) + unsigned(entr));
-        if aux'left /= '0' then
+        --if aux'left /= '0' then
+        if aux(N/2) /= '0' then
             rtn := (others => '1');
         else
             rtn := aux((N/2)-1 downto 0); -- ignore the MSB (carry)
@@ -68,7 +69,7 @@ begin
         elsif enable = '1' then
             accumulator <= saturated_addition(accumulator,entrant);
             accumulator <= saturated_subtraction(accumulator,outgoing);
-            average := std_logic_vector( (unsigned(accumulator)/(N/2) ));
+            average <= std_logic_vector( (unsigned(accumulator)/(N/2) ));
         end if;
     end process sequence;
 
