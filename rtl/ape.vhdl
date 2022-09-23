@@ -21,14 +21,14 @@ entity ape is
         ---------------------------------------------------
 
         -- APE output -------------------------------------
-        average : out std_logic_vector(B-1 downto 0);
+        average : out std_logic_vector(B-1 downto 0)
         ---------------------------------------------------
     );
 end ape;
 
 architecture rtl of ape is
 
-    variable accumulator : std_logic_vector((N/2)-1 downto 0);
+    signal accumulator : std_logic_vector((N/2)-1 downto 0);
 
     function saturated_addition(
         accu : std_logic_vector((N/2)-1 downto 0);
@@ -38,7 +38,7 @@ architecture rtl of ape is
         variable rtn : std_logic_vector((N/2)-1 downto 0);
     begin
         aux := std_logic_vector(unsigned(accu) + unsigned(entr));
-        if aux'right /= '0' then
+        if aux'left /= '0' then
             rtn := (others => '1');
         else
             rtn := aux((N/2)-1 downto 0); -- ignore the MSB (carry)
@@ -66,7 +66,9 @@ begin
         if reset = '0' then
             average <= (others => '0');
         elsif enable = '1' then
-
+            accumulator <= saturated_addition(accumulator,entrant);
+            accumulator <= saturated_subtraction(accumulator,outgoing);
+            average := std_logic_vector( (unsigned(accumulator)/(N/2) ));
         end if;
     end process sequence;
 
