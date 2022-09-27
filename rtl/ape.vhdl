@@ -32,45 +32,33 @@ architecture rtl of ape is
 
     function saturated_addition(
         accu : std_logic_vector((N/2)-1 downto 0);
-        entr : std_logic_vector(B-1 downto 0))
+        entr : std_logic_vector(B-1 downto 0);
+        sal : std_logic_vector(B-1 downto 0))
         return std_logic_vector is
-        variable aux : std_logic_vector(N/2 downto 0);
+        variable aux : std_logic_vector((N/2)-1 downto 0);
         variable rtn : std_logic_vector((N/2)-1 downto 0);
     begin
-        aux := std_logic_vector(unsigned(accu) + unsigned(entr));
-        --if aux'left /= '0' then
-        if aux(N/2) /= '0' then
+        aux := std_logic_vector(unsigned(accu) + unsigned(entr) - unsigned(sal));
+        if aux((N/2)-1) /= '0' then
             rtn := (others => '1');
         else
-            rtn := aux((N/2)-1 downto 0); -- ignore the MSB (carry)
+            rtn := aux;
         end if;
         return rtn;
     end function saturated_addition;
-
-    function saturated_subtraction(
-        accu : std_logic_vector((N/2)-1 downto 0);
-        outg : std_logic_vector(B-1 downto 0))
-        return std_logic_vector is
-        variable rtn : std_logic_vector((N/2)-1 downto 0);
-    begin
-        if accu < outg then
-            rtn := (others => '0');
-        else
-            rtn := std_logic_vector(unsigned(accu) - unsigned(outg));
-        end if;
-        return rtn;
-    end function saturated_subtraction;
 
 begin
     sequence : process(clock) is
     begin
         if reset = '0' then
             average <= (others => '0');
+            data_mul <= (others => '0');
+            accumulator <= (others => '0');
         elsif enable = '1' then
-            accumulator <= saturated_addition(accumulator,entrant);
-            accumulator <= saturated_subtraction(accumulator,outgoing);
-            average <= std_logic_vector( (unsigned(accumulator)/(N/2) ));
+            accumulator <= saturated_addition(accumulator,entrant,outgoing);
+            data_mul <= accumulator;
         end if;
+        average <= data_mul(B-1 DOWNTO 0);
     end process sequence;
 
 end architecture rtl;
