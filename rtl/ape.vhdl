@@ -29,7 +29,8 @@ end ape;
 architecture rtl of ape is
 
     signal accumulator : std_logic_vector((N/2)-1 downto 0);
-
+    signal data_mul : std_logic_vector((N/2)-1 downto 0);
+    
     function saturated_addition(
         accu : std_logic_vector((N/2)-1 downto 0);
         entr : std_logic_vector(B-1 downto 0);
