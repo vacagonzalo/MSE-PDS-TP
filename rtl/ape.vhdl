@@ -7,7 +7,7 @@ entity ape is
     generic(
         B : integer := 12; -- Data width in bits
         N : integer := 32; -- CFAR window size
-        windows_ptr : integer := 1   -- cuanto me desplazo en la division
+        windows_ptr : integer := 4
     );
     port(
         -- Common control signals -------------------------
@@ -29,10 +29,6 @@ end ape;
 
 architecture rtl of ape is
     constant ACC_GROWTH  : natural := natural(ceil(log2(real(N))));
-    signal accumulator : std_logic_vector((B+ACC_GROWTH) downto 0);
-    signal data_mul : std_logic_vector((B+ACC_GROWTH) downto 0);
-    signal accumulator_2 : unsigned((B+ACC_GROWTH) downto 0);
-
     function saturated_addition(
         accu : std_logic_vector(B+ACC_GROWTH downto 0);
         entr : std_logic_vector(B-1 downto 0);
@@ -52,21 +48,22 @@ architecture rtl of ape is
 
 begin
     sequence : process(clock) is
+        variable accumulator : std_logic_vector((B+ACC_GROWTH) downto 0);
+        variable data_mul : std_logic_vector((B+ACC_GROWTH) downto 0);
+        variable accumulator_2 : unsigned((B+ACC_GROWTH) downto 0);
         begin
         if rising_edge(clock) then
             if reset = '0' then
-                average <= (others => '0');
-                data_mul <= (others => '0');
-                accumulator <= (others => '0');
-                accumulator_2 <= (others => '0');
+                data_mul := (others => '0');
+                accumulator := (others => '0');
+                accumulator_2 := (others => '0');
             elsif enable = '1' then
-                accumulator <= saturated_addition(accumulator,entrant,outgoing);
-                accumulator_2 <= shift_right(unsigned(accumulator), windows_ptr);
-                data_mul <= std_logic_vector(accumulator_2);
-                --data_mul <= accumulator;
+                accumulator := saturated_addition(accumulator,entrant,outgoing);
+                accumulator_2 := shift_right(unsigned(accumulator), windows_ptr);
+                data_mul := std_logic_vector(accumulator_2); 
             end if;
-            average <= data_mul(B-1 DOWNTO 0);
-        end if;
+            average <= data_mul(B-1 DOWNTO 0); 
+        end if;       
     end process sequence;
-
+    
 end architecture rtl;
