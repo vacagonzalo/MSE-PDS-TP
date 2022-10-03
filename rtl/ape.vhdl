@@ -52,19 +52,21 @@ architecture rtl of ape is
 
 begin
     sequence : process(clock) is
-    begin
-        if reset = '0' then
-            average <= (others => '0');
-            data_mul <= (others => '0');
-            accumulator <= (others => '0');
-            accumulator_2 <= (others => '0');
-        elsif enable = '1' then
-            accumulator <= saturated_addition(accumulator,entrant,outgoing);
-            accumulator_2 <= shift_right(unsigned(accumulator), windows_ptr);
-            data_mul <= std_logic_vector(accumulator_2);
-            --data_mul <= accumulator;
+        begin
+        if rising_edge(clock) then
+            if reset = '0' then
+                average <= (others => '0');
+                data_mul <= (others => '0');
+                accumulator <= (others => '0');
+                accumulator_2 <= (others => '0');
+            elsif enable = '1' then
+                accumulator <= saturated_addition(accumulator,entrant,outgoing);
+                accumulator_2 <= shift_right(unsigned(accumulator), windows_ptr);
+                data_mul <= std_logic_vector(accumulator_2);
+                --data_mul <= accumulator;
+            end if;
+            average <= data_mul(B-1 DOWNTO 0);
         end if;
-        average <= data_mul(B-1 DOWNTO 0);
     end process sequence;
 
 end architecture rtl;
