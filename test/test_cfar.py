@@ -53,7 +53,7 @@ async def no_target(dut):
 
     dut.entrant.value = 0xf
 
-    fifo_size = 32 + 16
+    fifo_size = 16 + 8 + 1
     for cycle in range(fifo_size):
         dut.clock.value = 0
         await Timer(1, units="ns")
@@ -66,7 +66,7 @@ async def no_target(dut):
 
 @cocotb.test()
 async def target_detected(dut):
-    """Testing no target condition."""
+    """Testing target condition."""
     # Common control signals
     dut.reset.value = 0
     dut.enable.value = 1
@@ -92,7 +92,7 @@ async def target_detected(dut):
 
     dut.entrant.value = 0xe
 
-    fifo_size = 32 + 16
+    fifo_size = 16 + 8 + 1
     for cycle in range(fifo_size):
         dut.clock.value = 0
         await Timer(1, units="ns")
