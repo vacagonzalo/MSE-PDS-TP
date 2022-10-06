@@ -19,7 +19,7 @@ async def entrada_con_valor(dut):
     """Testing valid target"""
 
     dut.reset.value = 1
-    dut.enable.value = 1    
+    dut.enable.value = 1
 
     dut.entrant.value =  20#<--
     dut.outgoing.value = 0
@@ -44,7 +44,7 @@ async def entrada_mixta(dut):
         await Timer(1, units="ns")
 
     dut.reset.value = 1
-    dut.enable.value = 1    
+    dut.enable.value = 1
 
     dut.entrant.value =  20#<--
     dut.outgoing.value = 0

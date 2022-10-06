@@ -4,7 +4,7 @@
 SIM ?= ghdl
 TOPLEVEL_LANG ?= vhdl
 
-VHDL_SOURCES += $(PWD)/../rtl/fifo.vhdl
+VHDL_SOURCES += $(PWD)/../src/fifo.vhdl
 
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
 TOPLEVEL = fifo

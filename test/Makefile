@@ -4,7 +4,10 @@
 SIM ?= ghdl
 TOPLEVEL_LANG ?= vhdl
 
-VHDL_SOURCES += $(PWD)/../rtl/cfar.vhdl
+VHDL_SOURCES += $(PWD)/../src/ape.vhdl
+VHDL_SOURCES += $(PWD)/../src/cfar.vhdl
+VHDL_SOURCES += $(PWD)/../src/ctpe.vhdl
+VHDL_SOURCES += $(PWD)/../src/fifo.vhdl
 
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
 TOPLEVEL = cfar
