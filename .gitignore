@@ -4,6 +4,8 @@ test/__pycache__/
 test/*.o
 test/*.xml
 test/ctpe
+test/cfar
+test/fifo
 
 # Created by https://www.toptal.com/developers/gitignore/api/latex
 # Edit at https://www.toptal.com/developers/gitignore?templates=latex

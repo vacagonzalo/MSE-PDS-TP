@@ -4,7 +4,7 @@
 SIM ?= ghdl
 TOPLEVEL_LANG ?= vhdl
 
-VHDL_SOURCES += $(PWD)/../rtl/ape.vhdl
+VHDL_SOURCES += $(PWD)/../src/ape.vhdl
 
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
 TOPLEVEL = ape

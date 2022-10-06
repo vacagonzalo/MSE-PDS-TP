@@ -60,10 +60,10 @@ begin
             elsif enable = '1' then
                 accumulator := saturated_addition(accumulator,entrant,outgoing);
                 accumulator_2 := shift_right(unsigned(accumulator), windows_ptr);
-                data_mul := std_logic_vector(accumulator_2); 
+                data_mul := std_logic_vector(accumulator_2);
             end if;
-            average <= data_mul(B-1 DOWNTO 0); 
-        end if;       
+            average <= data_mul(B-1 DOWNTO 0);
+        end if;
     end process sequence;
-    
+
 end architecture rtl;

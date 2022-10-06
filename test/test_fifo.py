@@ -16,14 +16,20 @@ async def reset(dut):
         dut.clock.value = 1
         await Timer(1, units="ns")
 
-    dut._log.info("left_half is %s", dut.left_half.value)
-    assert dut.left_half.value == 0, "left_half is not 0!"
+    dut._log.info("left_half_entering is %s", dut.left_half_entering.value)
+    assert dut.left_half_entering.value == 0, "left_half_entering is not 0!"
+
+    dut._log.info("left_half_outgoing is %s", dut.left_half_outgoing.value)
+    assert dut.left_half_outgoing.value == 0, "left_half_outgoing is not 0!"
 
     dut._log.info("evaluated is %s", dut.evaluated.value)
     assert dut.evaluated.value == 0, "evaluated is not 0!"
 
-    dut._log.info("right_half is %s", dut.right_half.value)
-    assert dut.right_half.value == 0, "right_half is not 0!"
+    dut._log.info("right_half_entering is %s", dut.right_half_entering.value)
+    assert dut.right_half_entering.value == 0, "right_half_entering is not 0!"
+
+    dut._log.info("right_half_outgoing is %s", dut.right_half_outgoing.value)
+    assert dut.right_half_outgoing.value == 0, "right_half_outgoing is not 0!"
 
 
 @cocotb.test()
