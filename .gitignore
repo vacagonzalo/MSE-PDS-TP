@@ -2,9 +2,10 @@
 test/sim_build/
 test/__pycache__/
 test/*.o
+test/*.vcd
 test/*.xml
-test/ctpe
 test/cfar
+test/ctpe
 test/fifo
 
 # Created by https://www.toptal.com/developers/gitignore/api/latex

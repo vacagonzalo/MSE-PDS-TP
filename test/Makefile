@@ -4,6 +4,8 @@
 SIM ?= ghdl
 TOPLEVEL_LANG ?= vhdl
 
+SIM_ARGS ?= --vcd=cfar.vcd
+
 VHDL_SOURCES += $(PWD)/../src/ape.vhdl
 VHDL_SOURCES += $(PWD)/../src/cfar.vhdl
 VHDL_SOURCES += $(PWD)/../src/ctpe.vhdl
