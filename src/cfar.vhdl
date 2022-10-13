@@ -43,7 +43,7 @@ architecture hierarchical of cfar is
 
 begin
 
-    fifo_buffer : entity work.fifo(rtl)
+    fifo_buffer : entity work.pds_fifo(rtl)
         generic map (
             B => B,
             N => N,

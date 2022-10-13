@@ -9,7 +9,7 @@ SIM_ARGS ?= --vcd=cfar.vcd
 VHDL_SOURCES += $(PWD)/../src/ape.vhdl
 VHDL_SOURCES += $(PWD)/../src/cfar.vhdl
 VHDL_SOURCES += $(PWD)/../src/ctpe.vhdl
-VHDL_SOURCES += $(PWD)/../src/fifo.vhdl
+VHDL_SOURCES += $(PWD)/../src/pds_fifo.vhdl
 
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
 TOPLEVEL = cfar
