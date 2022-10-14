@@ -6,6 +6,8 @@ TOPLEVEL_LANG ?= vhdl
 
 VHDL_SOURCES += $(PWD)/../src/ctpe.vhdl
 
+SIM_ARGS ?= --vcd=ctpe.vcd
+
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
 TOPLEVEL = ctpe
 

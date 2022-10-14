@@ -2,7 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-entity fifo is
+entity pds_fifo is
     generic(
         B : integer := 12; -- Data width in bits
         N : integer := 32; -- CFAR window size
@@ -27,16 +27,16 @@ entity fifo is
         right_half_outgoing : out std_logic_vector(B-1 downto 0)
         ---------------------------------------------------------
     );
-end fifo;
+end pds_fifo;
 
-architecture rtl of fifo is
+architecture rtl of pds_fifo is
 
     type memory_t is array (N + (2 * G) downto 0) of std_logic_vector(B-1 downto 0);
     signal memory : memory_t;
 
 begin
 
-    sequence : process(clock) is
+    fifo_sequence : process(clock) is
     begin
         if rising_edge(clock) then
             if reset = '0' then
@@ -50,7 +50,7 @@ begin
                 memory(memory'left) <= entrant;
             end if;
         end if;
-    end process sequence;
+    end process fifo_sequence;
 
     left_half_entering  <= memory(memory'left);
     left_half_outgoing  <= memory(memory'left - (N/2));

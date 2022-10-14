@@ -6,6 +6,8 @@ TOPLEVEL_LANG ?= vhdl
 
 VHDL_SOURCES += $(PWD)/../src/ape.vhdl
 
+SIM_ARGS ?= --vcd=ape.vcd
+
 # TOPLEVEL is the name of the toplevel module in your Verilog or VHDL file
 TOPLEVEL = ape
 
