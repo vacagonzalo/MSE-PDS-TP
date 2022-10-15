@@ -1,69 +1,69 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-use ieee.math_real.all;
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
+USE ieee.math_real.ALL;
 
-entity ape is
-    generic(
-        B : integer := 12; -- Data width in bits
-        N : integer := 32; -- CFAR window size
-        windows_ptr : integer := 4
+ENTITY ape IS
+    GENERIC (
+        B : INTEGER := 12; -- Data width in bits
+        N : INTEGER := 32; -- CFAR window size
+        windows_ptr : INTEGER := 4
     );
-    port(
+    PORT (
         -- Common control signals -------------------------
-        clock : in std_logic;
-        reset : in std_logic;
-        enable : in std_logic;
+        clock : IN STD_LOGIC;
+        reset : IN STD_LOGIC;
+        enable : IN STD_LOGIC;
         ---------------------------------------------------
 
         -- APE inputs -------------------------------------
-        entrant : in std_logic_vector(B-1 downto 0);
-        outgoing : in std_logic_vector(B-1 downto 0);
+        entrant : IN STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
+        outgoing : IN STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
         ---------------------------------------------------
 
         -- APE output -------------------------------------
-        average : out std_logic_vector(B-1 downto 0)
+        average : OUT STD_LOGIC_VECTOR(B - 1 DOWNTO 0)
         ---------------------------------------------------
     );
-end ape;
+END ape;
 
-architecture rtl of ape is
-    constant ACC_GROWTH  : natural := natural(ceil(log2(real(N))));
-    function saturated_addition(
-        accu : std_logic_vector(B+ACC_GROWTH downto 0);
-        entr : std_logic_vector(B-1 downto 0);
-        sal : std_logic_vector(B-1 downto 0))
-        return std_logic_vector is
-        variable aux : std_logic_vector(B+ACC_GROWTH downto 0);
-        variable rtn : std_logic_vector(B+ACC_GROWTH downto 0);
-    begin
-        aux := std_logic_vector(unsigned(accu) + unsigned(entr) - unsigned(sal));
-        if aux((B+ACC_GROWTH)-1) /= '0' then
-            rtn := (others => '1');
-        else
+ARCHITECTURE rtl OF ape IS
+    CONSTANT ACC_GROWTH : NATURAL := NATURAL(ceil(log2(real(N))));
+    FUNCTION saturated_addition(
+        accu : STD_LOGIC_VECTOR(B + ACC_GROWTH DOWNTO 0);
+        entr : STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
+        sal : STD_LOGIC_VECTOR(B - 1 DOWNTO 0))
+        RETURN STD_LOGIC_VECTOR IS
+        VARIABLE aux : STD_LOGIC_VECTOR(B + ACC_GROWTH DOWNTO 0);
+        VARIABLE rtn : STD_LOGIC_VECTOR(B + ACC_GROWTH DOWNTO 0);
+    BEGIN
+        aux := STD_LOGIC_VECTOR(unsigned(accu) + unsigned(entr) - unsigned(sal));
+        IF aux((B + ACC_GROWTH) - 1) /= '0' THEN
+            rtn := (OTHERS => '1');
+        ELSE
             rtn := aux;
-        end if;
-        return rtn;
-    end function saturated_addition;
+        END IF;
+        RETURN rtn;
+    END FUNCTION saturated_addition;
 
-begin
-    sequence : process(clock) is
-        variable accumulator : std_logic_vector((B+ACC_GROWTH) downto 0);
-        variable data_mul : std_logic_vector((B+ACC_GROWTH) downto 0);
-        variable accumulator_2 : unsigned((B+ACC_GROWTH) downto 0);
-        begin
-        if rising_edge(clock) then
-            if reset = '0' then
-                data_mul := (others => '0');
-                accumulator := (others => '0');
-                accumulator_2 := (others => '0');
-            elsif enable = '1' then
-                accumulator := saturated_addition(accumulator,entrant,outgoing);
+BEGIN
+    ape_sequence : PROCESS (clock) IS
+        VARIABLE accumulator : STD_LOGIC_VECTOR((B + ACC_GROWTH) DOWNTO 0);
+        VARIABLE data_mul : STD_LOGIC_VECTOR((B + ACC_GROWTH) DOWNTO 0);
+        VARIABLE accumulator_2 : unsigned((B + ACC_GROWTH) DOWNTO 0);
+    BEGIN
+        IF rising_edge(clock) THEN
+            IF reset = '0' THEN
+                data_mul := (OTHERS => '0');
+                accumulator := (OTHERS => '0');
+                accumulator_2 := (OTHERS => '0');
+            ELSIF enable = '1' THEN
+                accumulator := saturated_addition(accumulator, entrant, outgoing);
                 accumulator_2 := shift_right(unsigned(accumulator), windows_ptr);
-                data_mul := std_logic_vector(accumulator_2);
-            end if;
-            average <= data_mul(B-1 DOWNTO 0);
-        end if;
-    end process sequence;
+                data_mul := STD_LOGIC_VECTOR(accumulator_2);
+            END IF;
+            average <= data_mul(B - 1 DOWNTO 0);
+        END IF;
+    END PROCESS ape_sequence;
 
-end architecture rtl;
+END ARCHITECTURE rtl;
