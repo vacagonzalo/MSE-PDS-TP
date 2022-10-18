@@ -1,55 +1,55 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
+LIBRARY ieee;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
 
-entity cfar is
-    generic(
-        B : integer := 12; -- Data width in bits
-        N : integer := 32; -- CFAR window size
-        G : integer := 8;  -- CFAR guard size
-        windows_ptr : integer := 4
+ENTITY cfar IS
+    GENERIC (
+        B : INTEGER := 12; -- Data width in bits
+        N : INTEGER := 32; -- CFAR window size
+        G : INTEGER := 8; -- CFAR guard size
+        windows_ptr : INTEGER := 4
     );
-    port(
+    PORT (
         -- Common control signals -------------------------
-        clock : in std_logic;
-        reset : in std_logic;
-        enable : in std_logic;
+        clock : IN STD_LOGIC;
+        reset : IN STD_LOGIC;
+        enable : IN STD_LOGIC;
         ---------------------------------------------------
 
         -- Input ------------------------------------------
-        cfar_selector : in std_logic_vector(1 downto 0);
-        scale_factor : in std_logic_vector(B-1 downto 0);
-        entrant : in std_logic_vector(B-1 downto 0);
+        cfar_selector : IN STD_LOGIC_VECTOR(1 DOWNTO 0);
+        scale_factor : IN STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
+        entrant : IN STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
         ---------------------------------------------------
 
         -- Outputs ----------------------------------------
-        filter_output : out std_logic
+        filter_output : OUT STD_LOGIC
         ---------------------------------------------------
     );
-end cfar;
+END cfar;
 
-architecture hierarchical of cfar is
+ARCHITECTURE hierarchical OF cfar IS
 
-    signal left_entering : std_logic_vector(B-1 downto 0);
-    signal left_outgoing : std_logic_vector(B-1 downto 0);
+    SIGNAL left_entering : STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
+    SIGNAL left_outgoing : STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
 
-    signal right_entering : std_logic_vector(B-1 downto 0);
-    signal right_outgoing : std_logic_vector(B-1 downto 0);
+    SIGNAL right_entering : STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
+    SIGNAL right_outgoing : STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
 
-    signal left_average  : std_logic_vector(B-1 downto 0);
-    signal right_average : std_logic_vector(B-1 downto 0);
+    SIGNAL left_average : STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
+    SIGNAL right_average : STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
 
-    signal evaluated : std_logic_vector(B-1 downto 0);
+    SIGNAL evaluated : STD_LOGIC_VECTOR(B - 1 DOWNTO 0);
 
-begin
+BEGIN
 
-    fifo_buffer : entity work.pds_fifo(rtl)
-        generic map (
+    fifo_buffer : ENTITY work.pds_fifo(rtl)
+        GENERIC MAP(
             B => B,
             N => N,
             G => G
         )
-        port map (
+        PORT MAP(
             -- Common control signals -------------------------
             clock => clock,
             reset => reset,
@@ -69,21 +69,21 @@ begin
             ---------------------------------------------------
         );
 
-    left_ape : entity work.ape(rtl)
-        generic map (
+    left_ape : ENTITY work.ape(rtl)
+        GENERIC MAP(
             B => B,
             N => N,
             windows_ptr => windows_ptr
         )
-        port map (
+        PORT MAP(
             -- Common control signals -------------------------
-            clock  => clock,
-            reset  => reset,
+            clock => clock,
+            reset => reset,
             enable => enable,
             ---------------------------------------------------
 
             -- APE inputs -------------------------------------
-            entrant  => left_entering,
+            entrant => left_entering,
             outgoing => left_outgoing,
             ---------------------------------------------------
 
@@ -92,21 +92,21 @@ begin
             ---------------------------------------------------
         );
 
-    right_ape : entity work.ape(rtl)
-        generic map (
+    right_ape : ENTITY work.ape(rtl)
+        GENERIC MAP(
             B => B,
             N => N,
             windows_ptr => windows_ptr
         )
-        port map (
+        PORT MAP(
             -- Common control signals -------------------------
-            clock  => clock,
-            reset  => reset,
+            clock => clock,
+            reset => reset,
             enable => enable,
             ---------------------------------------------------
 
             -- APE inputs -------------------------------------
-            entrant  => right_entering,
+            entrant => right_entering,
             outgoing => right_outgoing,
             ---------------------------------------------------
 
@@ -115,13 +115,13 @@ begin
             ---------------------------------------------------
         );
 
-    ctpe_block : entity work.ctpe(rtl)
-        generic map (
+    ctpe_block : ENTITY work.ctpe(rtl)
+        GENERIC MAP(
             B => B,
             N => N,
             G => G
         )
-        port map (
+        PORT MAP(
             -- Common control signals -------------------------
             clock => clock,
             reset => reset,
@@ -130,12 +130,12 @@ begin
 
             -- Filter control signals -------------------------
             cfar_selector => cfar_selector,
-            scale_factor  => scale_factor,
+            scale_factor => scale_factor,
             ---------------------------------------------------
 
             -- Filter inputs ----------------------------------
-            ape_left     => left_average,
-            ape_right    => right_average,
+            ape_left => left_average,
+            ape_right => right_average,
             filter_input => evaluated,
             ---------------------------------------------------
 
@@ -144,4 +144,4 @@ begin
             ---------------------------------------------------
         );
 
-end architecture hierarchical;
+END ARCHITECTURE hierarchical;
